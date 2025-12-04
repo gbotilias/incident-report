@@ -1,0 +1,46 @@
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Student</th>
+      <th>Date</th>
+      <th>Status</th>
+      <th>Title</th>
+      <th>Description</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for(incident of incidents(); track incident.id) {
+    <tr>
+      <td>{{ incident.id }}</td>
+      <td>{{ incident.studentName }}</td>
+      <td>{{ incident.date | date : 'shortDate' }}</td>
+      <td>{{ incident.status }}</td>
+      <td>{{ incident.title }}</td>
+      <td>{{ incident.description }}</td>
+      <td class="actions">
+        @if (canEdit()) {
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="onEdit(incident)"
+          aria-label="Edit incident"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        } @if (canDelete()) {
+        <button
+          mat-icon-button
+          class="btn-delete"
+          (click)="onDelete(incident)"
+          aria-label="Delete incident"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+        }
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>

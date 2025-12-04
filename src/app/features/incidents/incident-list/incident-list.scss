@@ -1,0 +1,50 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 6px;
+}
+
+thead {
+  background-color: #f5f7fa;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 12px 14px;
+  font-size: 1rem;
+  vertical-align: top;
+}
+
+th {
+  font-weight: 600;
+  color: #333;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+td {
+  color: #444;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+tbody tr:hover {
+  background-color: #f1f5ff;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+}
+
+.btn-delete {
+  color: #d64848;
+
+  &:hover {
+    background-color: rgba(214, 72, 72, 0.1);
+  }
+}

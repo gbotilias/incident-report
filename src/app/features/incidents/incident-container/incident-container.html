@@ -1,0 +1,68 @@
+<section class="incident-container">
+  <!-- User Role Switcher (for demo purposes) -->
+  <div class="role-switcher">
+    <span
+      >Current User: <strong>{{ authService.currentUser()?.name }}</strong> ({{
+        authService.currentUser()?.role
+      }})</span
+    >
+    <div class="role-buttons">
+      <button mat-button (click)="authService.loginAs(UserRole.ADMIN)">Login as Admin</button>
+      <button mat-button (click)="authService.loginAs(UserRole.TEACHER)">Login as Teacher</button>
+      <button mat-button (click)="authService.loginAs(UserRole.VIEWER)">Login as Viewer</button>
+    </div>
+  </div>
+
+  <h1>Incident Reports</h1>
+
+  <!-- Filter Controls -->
+  <div class="filters">
+    <mat-form-field>
+      <mat-label>Filter by Status</mat-label>
+      <mat-select [value]="statusFilter()" (valueChange)="statusFilter.set($event)">
+        @for (status of statuses; track status) {
+        <mat-option [value]="status">{{ status }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Filter by Student Name</mat-label>
+      <input
+        matInput
+        [value]="studentFilter()"
+        (input)="studentFilter.set($any($event.target).value)"
+        placeholder="Search student..."
+      />
+      @if (studentFilter()) {
+      <button matSuffix mat-icon-button (click)="studentFilter.set('')" aria-label="Clear search">
+        <mat-icon>close</mat-icon>
+      </button>
+      }
+    </mat-form-field>
+  </div>
+
+  <app-incident-list
+    [incidents]="incidents()"
+    [canEdit]="authService.canModifyIncidents()"
+    [canDelete]="authService.canDeleteIncidents()"
+    (edit)="onEditIncident($event)"
+    (delete)="onDeleteIncident($event)"
+  >
+  </app-incident-list>
+
+  <!-- FAB button - only show if user can modify incidents -->
+  @if (authService.canModifyIncidents()) {
+  <button
+    mat-fab
+    extended
+    color="primary"
+    class="add-fab"
+    (click)="onAddIncident()"
+    aria-label="Add new incident"
+  >
+    <mat-icon>add</mat-icon>
+    New Incident
+  </button>
+  }
+</section>

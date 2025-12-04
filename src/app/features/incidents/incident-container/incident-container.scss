@@ -1,0 +1,44 @@
+.incident-container {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  h1 {
+    font-weight: 600;
+  }
+}
+
+.role-switcher {
+  background-color: #f5f7fa;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+
+  span {
+    font-size: 14px;
+    color: #444;
+  }
+
+  .role-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+
+.filters {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.add-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+}
