@@ -12,9 +12,7 @@ import { Incident } from '../../../core/models/incident.model';
 })
 export class IncidentListComponent {
   incidents = input<Incident[]>();
-  canEdit = input<boolean>(true); // Permission to edit incidents
-  canDelete = input<boolean>(true); // Permission to delete incidents
-
+  showActions = input<boolean>();
   edit = output<Incident>();
   delete = output<Incident>();
 

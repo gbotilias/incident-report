@@ -1,21 +1,16 @@
 <section class="incident-container">
-  <!-- User Role Switcher (for demo purposes) -->
   <div class="role-switcher">
     <span
-      >Current User: <strong>{{ authService.currentUser()?.name }}</strong> ({{
-        authService.currentUser()?.role
-      }})</span
+      >Current User: <strong>{{ currentUserName() }}</strong></span
     >
     <div class="role-buttons">
-      <button mat-button (click)="authService.loginAs(UserRole.ADMIN)">Login as Admin</button>
-      <button mat-button (click)="authService.loginAs(UserRole.TEACHER)">Login as Teacher</button>
-      <button mat-button (click)="authService.loginAs(UserRole.VIEWER)">Login as Viewer</button>
+      <button mat-button (click)="loginAsTeacher()">Login as Teacher</button>
+      <button mat-button (click)="loginAsViewer()">Login as Viewer</button>
     </div>
   </div>
 
   <h1>Incident Reports</h1>
 
-  <!-- Filter Controls -->
   <div class="filters">
     <mat-form-field>
       <mat-label>Filter by Status</mat-label>
@@ -44,14 +39,12 @@
 
   <app-incident-list
     [incidents]="incidents()"
-    [canEdit]="authService.canModifyIncidents()"
-    [canDelete]="authService.canDeleteIncidents()"
+    [showActions]="authService.canModifyIncidents()"
     (edit)="onEditIncident($event)"
     (delete)="onDeleteIncident($event)"
   >
   </app-incident-list>
 
-  <!-- FAB button - only show if user can modify incidents -->
   @if (authService.canModifyIncidents()) {
   <button
     mat-fab

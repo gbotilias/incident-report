@@ -3,6 +3,7 @@ import { IncidentStatus } from '../enums/incident-status.enum';
 export interface Incident {
   id: number;
   studentName: string;
+  studentEmail: string;
   status: IncidentStatus;
   title: string;
   description: string;

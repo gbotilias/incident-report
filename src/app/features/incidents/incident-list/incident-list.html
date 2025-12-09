@@ -7,7 +7,9 @@
       <th>Status</th>
       <th>Title</th>
       <th>Description</th>
+      @if (showActions()) {
       <th>Actions</th>
+      }
     </tr>
   </thead>
   <tbody>
@@ -19,8 +21,8 @@
       <td>{{ incident.status }}</td>
       <td>{{ incident.title }}</td>
       <td>{{ incident.description }}</td>
+      @if (showActions()) {
       <td class="actions">
-        @if (canEdit()) {
         <button
           mat-icon-button
           color="primary"
@@ -29,7 +31,6 @@
         >
           <mat-icon>edit</mat-icon>
         </button>
-        } @if (canDelete()) {
         <button
           mat-icon-button
           class="btn-delete"
@@ -38,8 +39,8 @@
         >
           <mat-icon>delete</mat-icon>
         </button>
-        }
       </td>
+      }
     </tr>
     }
   </tbody>

@@ -11,6 +11,16 @@
     </mat-form-field>
 
     <mat-form-field>
+      <mat-label>Student Email</mat-label>
+      <input matInput type="email" formControlName="studentEmail" required />
+      @if (form.get('studentEmail')?.hasError('required')) {
+      <mat-error>Student email is required</mat-error>
+      } @if (form.get('studentEmail')?.hasError('email')) {
+      <mat-error>Please enter a valid email</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
       <mat-label>Title</mat-label>
       <input matInput formControlName="title" required />
       @if (form.get('title')?.hasError('required')) {

@@ -31,19 +31,14 @@ export interface IncidentFormDialogData {
   styleUrl: './incident-form-dialog.scss',
 })
 export class IncidentFormDialogComponent {
-  // Dialog reference for closing and returning data
   private readonly dialogRef = inject(MatDialogRef<IncidentFormDialogComponent>);
   private readonly fb = inject(FormBuilder);
-  // Data passed from parent component (incident for edit mode, or just mode flag for create)
   readonly data = inject<IncidentFormDialogData>(MAT_DIALOG_DATA);
-
-  // Extract all status values from enum for dropdown options
   readonly statuses = Object.values(IncidentStatus);
 
-  // Reactive form with validation
-  // Pre-populate fields if editing, otherwise use defaults
   readonly form = this.fb.group({
     studentName: [this.data.incident?.studentName || '', Validators.required],
+    studentEmail: [this.data.incident?.studentEmail || '', [Validators.required, Validators.email]],
     title: [this.data.incident?.title || '', Validators.required],
     description: [this.data.incident?.description || '', Validators.required],
     status: [this.data.incident?.status || IncidentStatus.OPEN, Validators.required],
@@ -53,10 +48,6 @@ export class IncidentFormDialogComponent {
     ],
   });
 
-  /**
-   * Determines if the dialog is in edit mode (vs create mode)
-   * Used to change UI text and behavior
-   */
   get isEditMode(): boolean {
     return this.data.mode === 'edit';
   }
@@ -70,6 +61,7 @@ export class IncidentFormDialogComponent {
       const formValue = this.form.value;
       const result: Partial<Incident> = {
         studentName: formValue.studentName ?? undefined,
+        studentEmail: formValue.studentEmail ?? undefined,
         title: formValue.title ?? undefined,
         description: formValue.description ?? undefined,
         status: formValue.status ?? undefined,
