@@ -7,13 +7,15 @@ import { User } from '../models/user.model';
 })
 export class AuthService {
   private readonly mockUsers: User[] = [
-    { id: 1, name: 'Teacher', role: UserRole.TEACHER },
-    { id: 2, name: 'Viewer', role: UserRole.VIEWER },
+    { id: 0, name: 'Teacher', role: UserRole.TEACHER },
+    { id: 1, name: 'Viewer', role: UserRole.VIEWER },
   ];
 
-  private currentUserSignal = signal<User | null>(this.mockUsers[0]);
+  // Private signal for service state
+  private currentUserSignal = signal<User>(this.mockUsers[0]);
+  // Public readonly signal for external access
   readonly currentUser = this.currentUserSignal.asReadonly();
-
+  // True for Teacher role, false for Viewer role
   readonly canModifyIncidents = computed(() => this.currentUserSignal()?.role === UserRole.TEACHER);
 
   loginAs(role: UserRole): void {

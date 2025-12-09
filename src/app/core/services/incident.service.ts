@@ -6,14 +6,20 @@ import { Incident } from '../models/incident.model';
   providedIn: 'root',
 })
 export class IncidentService {
+  // Private signal for service state
   private incidentsSignal = signal<Incident[]>([...mockIncidents]);
+  // Public readonly signal for external access
   incidents = this.incidentsSignal.asReadonly();
 
-  addIncident(incident: Omit<Incident, 'id'>): void {
+  addIncident(incident: Incident): void {
+    const currentIncidents = this.incidentsSignal();
+    const maxId = currentIncidents.length > 0 ? Math.max(...currentIncidents.map((i) => i.id)) : 0;
+
     const newIncident: Incident = {
       ...incident,
-      id: Math.max(...this.incidentsSignal().map((i) => i.id), 0) + 1,
+      id: maxId + 1,
     };
+
     this.incidentsSignal.update((incidents) => [...incidents, newIncident]);
   }
 

@@ -6,7 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { filter, switchMap } from 'rxjs';
 import { IncidentStatus } from '../../../core/enums/incident-status.enum';
 import { UserRole } from '../../../core/enums/user-role.enum';
 import { Incident } from '../../../core/models/incident.model';
@@ -32,30 +31,31 @@ import { IncidentListComponent } from '../incident-list/incident-list';
   styleUrl: './incident-container.scss',
 })
 export class IncidentContainerComponent {
+  // Services
   private readonly incidentService = inject(IncidentService);
   readonly authService = inject(AuthService);
   private readonly emailService = inject(EmailService);
   private readonly dialog = inject(MatDialog);
   private readonly snackBar = inject(MatSnackBar);
 
+  // Filter options and state
   readonly statuses = ['All', ...Object.values(IncidentStatus)];
-
   readonly statusFilter = signal<string>('All');
   readonly studentFilter = signal<string>('');
 
+  // Computed properties
   readonly currentUserName = computed(() => this.authService.currentUser()?.name || '');
-
   private readonly allIncidents = this.incidentService.incidents;
 
   readonly incidents = computed(() => {
     const status = this.statusFilter();
     const student = this.studentFilter().toLowerCase().trim();
 
-    return this.allIncidents().filter(
-      (incident) =>
-        (status === 'All' || incident.status === status) &&
-        (student === '' || incident.studentName.toLowerCase().includes(student))
-    );
+    return this.allIncidents().filter((incident) => {
+      const matchesStatus = status === 'All' || incident.status === status;
+      const matchesStudent = student === '' || incident.studentName.toLowerCase().includes(student);
+      return matchesStatus && matchesStudent;
+    });
   });
 
   onDeleteIncident(incident: Incident): void {
@@ -68,20 +68,16 @@ export class IncidentContainerComponent {
       },
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(
-        filter((confirmed) => !!confirmed),
-        switchMap(() => {
-          this.incidentService.deleteIncident(incident.id);
-          return this.emailService.sendIncidentDeletedEmail(incident.title, incident.studentEmail);
-        })
-      )
-      .subscribe((message) => {
-        this.snackBar.open(`Incident deleted successfully. ${message}`, 'Close', {
-          duration: 4000,
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed) {
+        this.incidentService.deleteIncident(incident.id);
+        this.emailService.sendEmail(incident.studentEmail).subscribe((message) => {
+          this.snackBar.open(`Incident deleted. ${message}`, 'Close', {
+            duration: 3000,
+          });
         });
-      });
+      }
+    });
   }
 
   onEditIncident(incident: Incident): void {
@@ -93,20 +89,16 @@ export class IncidentContainerComponent {
       width: '600px',
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(
-        filter((result) => !!result),
-        switchMap((result) => {
-          this.incidentService.updateIncident(result);
-          return this.emailService.sendIncidentUpdatedEmail(result, result.studentEmail);
-        })
-      )
-      .subscribe((message) => {
-        this.snackBar.open(`Incident updated successfully. ${message}`, 'Close', {
-          duration: 4000,
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.incidentService.updateIncident(result);
+        this.emailService.sendEmail(result.studentEmail).subscribe((message) => {
+          this.snackBar.open(`Incident updated. ${message}`, 'Close', {
+            duration: 3000,
+          });
         });
-      });
+      }
+    });
   }
 
   onAddIncident(): void {
@@ -117,20 +109,16 @@ export class IncidentContainerComponent {
       width: '600px',
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(
-        filter((result) => !!result),
-        switchMap((result) => {
-          this.incidentService.addIncident(result);
-          return this.emailService.sendIncidentCreatedEmail(result, result.studentEmail);
-        })
-      )
-      .subscribe((message) => {
-        this.snackBar.open(`Incident created successfully. ${message}`, 'Close', {
-          duration: 4000,
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.incidentService.addIncident(result);
+        this.emailService.sendEmail(result.studentEmail).subscribe((message) => {
+          this.snackBar.open(`Incident created. ${message}`, 'Close', {
+            duration: 3000,
+          });
         });
-      });
+      }
+    });
   }
 
   loginAsTeacher(): void {
